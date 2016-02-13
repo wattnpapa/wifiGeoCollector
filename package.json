@@ -14,5 +14,8 @@
   "license": "GPL",
   "bugs": {
     "url": "https://github.com/PowerPan/wifiGeoCollector/issues"
+  },
+  "dependencies": {
+    "node-wifiscanner": "^0.2.1"
   }
 }
