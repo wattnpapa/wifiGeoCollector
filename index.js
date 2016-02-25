@@ -4,6 +4,9 @@ var Wifi = require('./wifi.js');
 var serialgps = require('super-duper-serial-gps-system');
 var gps = new serialgps('/dev/ttyACM0',9600);
 var cmd = require("cmd-exec").init();
+var Datastore = require('nedb');
+var db = {};
+db.wifis = new Datastore({ filename: 'db/wifis.db', autoload: true });
 
 // Variables
 var position =  {lat:0, lng:0};
@@ -34,10 +37,17 @@ function scanWifis(){
                 return;
             }
 
-            for(var i = 0; i < data.length ; i++){
-                var wifi = new Wifi(data[i].mac,data[i].signal_level, new Date(),position);
-                console.log(wifi);
-            }
+        for(var i = 0; i < data.length ; i++){
+            var wifi = new Wifi(data[i].mac,data[i].signal_level, new Date(),position);
+            db.wifis.insert(wifi, function (err, newDocs) {
+                // Two documents were inserted in the database
+                // newDocs is an array with these documents, augmented with their _id
+                console.log(newDocs);
+            });
+            console.log(wifi);
+        }
+
+
 
         console.log(start);
         console.log(new Date());
